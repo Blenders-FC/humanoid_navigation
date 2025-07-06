@@ -844,7 +844,7 @@ FootstepPlanner::updateEnvironment(const GridMap2DPtr old_map)
   //            cv::bitwise_not(changed_cells, changed_cells); // invert for distanceTransform
   //            cv::Mat changedDistMap = cv::Mat(changed_cells.size(), CV_32FC1);
   //            cv::distanceTransform(changed_cells, changedDistMap,
-  //                                  CV_DIST_L2, CV_DIST_MASK_PRECISE);
+  //                                  cv::DIST_L2, cv::DIST_MASK_PRECISE);
   //            double max_foot_radius = sqrt(
   //                    pow(std::abs(ivOriginFootShiftX) + ivFootsizeX / 2.0, 2.0) +
   //                    pow(std::abs(ivOriginFootShiftY) + ivFootsizeY / 2.0, 2.0))

@@ -173,7 +173,7 @@ PathCostHeuristic::updateMap(gridmap_2d::GridMap2DPtr map)
 void
 PathCostHeuristic::resetGrid()
 {
-  // CvSize size = ivMapPtr->size(); // here we get (height; width) instead of (width; height)
+  // cv::Size size = ivMapPtr->size(); // here we get (height; width) instead of (width; height)
   int width = ivMapPtr->getInfo().width;
   for (int x = 0; x < width; ++x)
   {

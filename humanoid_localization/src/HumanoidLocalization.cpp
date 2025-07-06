@@ -798,23 +798,42 @@ void HumanoidLocalization::prepareGeneralPointCloud(const sensor_msgs::PointClou
 
 }
 
+// void HumanoidLocalization::voxelGridSampling(const PointCloud & pc, pcl::PointCloud<int> & sampledIndices, double search_radius) const
+// {
+//    pcl::UniformSampling<pcl::PointXYZ> uniformSampling;
+//    pcl::PointCloud<pcl::PointXYZ>::Ptr cloudPtr;
+//    cloudPtr.reset(new pcl::PointCloud<pcl::PointXYZ> (pc)); // TODO: Check if this is a shallow copy..
+//    uniformSampling.setInputCloud(cloudPtr);
+//    pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud;
+//    uniformSampling.setRadiusSearch(search_radius);
+// #if PCL_MINOR_VERSION == 8
+//    uniformSampling.filter(*filteredCloud);
+//    for (auto ind : *uniformSampling.getIndices())
+//    {
+//      sampledIndices.push_back(ind);
+//    }
+// #else
+//    uniformSampling.compute(sampledIndices);
+// #endif
+// }
+
 void HumanoidLocalization::voxelGridSampling(const PointCloud & pc, pcl::PointCloud<int> & sampledIndices, double search_radius) const
 {
-   pcl::UniformSampling<pcl::PointXYZ> uniformSampling;
-   pcl::PointCloud<pcl::PointXYZ>::Ptr cloudPtr;
-   cloudPtr.reset(new pcl::PointCloud<pcl::PointXYZ> (pc)); // TODO: Check if this is a shallow copy..
-   uniformSampling.setInputCloud(cloudPtr);
-   pcl::PointCloud<pcl::PointXYZ>::Ptr filteredCloud;
-   uniformSampling.setRadiusSearch(search_radius);
-#if PCL_MINOR_VERSION == 8
-   uniformSampling.filter(*filteredCloud);
-   for (auto ind : *uniformSampling.getIndices())
-   {
-     sampledIndices.push_back(ind);
-   }
-#else
-   uniformSampling.compute(sampledIndices);
-#endif
+  pcl::UniformSampling<pcl::PointXYZ> uniformSampling;
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloudPtr(new pcl::PointCloud<pcl::PointXYZ>(pc));
+  
+  uniformSampling.setInputCloud(cloudPtr);
+  uniformSampling.setRadiusSearch(search_radius);
+
+  pcl::PointCloud<pcl::PointXYZ> filteredCloud;
+  uniformSampling.filter(filteredCloud);
+
+  // Retrieve sampled indices
+  const boost::shared_ptr<std::vector<int>> indices = uniformSampling.getIndices();
+  for (const int& ind : *indices)
+  {
+    sampledIndices.push_back(ind);
+  }
 }
 
 void HumanoidLocalization::pointCloudCallback(const sensor_msgs::PointCloud2::ConstPtr& msg) {
